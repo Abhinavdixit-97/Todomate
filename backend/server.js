@@ -10,12 +10,19 @@ const errorHandler = require('./middleware/errorHandler');
 const app = express();
 const PORT = process.env.PORT || 5001;
 
-// Middleware
+// Middleware - Fixed CORS for production
 const corsOptions = {
   origin: process.env.NODE_ENV === 'production' 
-    ? ['https://your-app.netlify.app', 'https://*.netlify.app']
-    : 'http://localhost:3001',
-  credentials: true
+    ? [
+        /\.netlify\.app$/,
+        /\.onrender\.com$/,
+        'https://todomate.netlify.app',
+        'https://your-app.netlify.app'
+      ]
+    : ['http://localhost:3001', 'http://localhost:3000'],
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
+  allowedHeaders: ['Content-Type', 'Authorization']
 };
 app.use(cors(corsOptions));
 app.use(express.json());
